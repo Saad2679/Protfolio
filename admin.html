@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - Contact Form Data</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background: #0a0a0a;
+            color: #ffffff;
+            line-height: 1.6;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 36px;
+            margin-bottom: 20px;
+            color: #00f2ff;
+        }
+
+        .glow-btn {
+            padding: 10px 30px;
+            background: transparent;
+            border: 2px solid #00f2ff;
+            color: #00f2ff;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: all 0.3s;
+            box-shadow: 0 0 10px #00f2ff;
+            margin: 10px;
+        }
+
+        .glow-btn:hover {
+            background: #00f2ff;
+            color: #0a0a0a;
+            box-shadow: 0 0 20px #00f2ff;
+        }
+
+        .delete-btn {
+            padding: 8px 20px;
+            background: transparent;
+            border: 2px solid #ff4d4d;
+            color: #ff4d4d;
+            font-size: 14px;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: all 0.3s;
+            box-shadow: 0 0 10px #ff4d4d;
+        }
+
+        .delete-btn:hover {
+            background: #ff4d4d;
+            color: #0a0a0a;
+            box-shadow: 0 0 20px #ff4d4d;
+        }
+
+        #dataDisplay {
+            background: #1a1a1a;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 242, 255, 0.2);
+            text-align: left;
+        }
+
+        #dataDisplay p {
+            font-size: 16px;
+            margin: 10px 0;
+        }
+
+        .data-card {
+            background: #2a2a2a;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 5px;
+            box-shadow: 0 0 5px rgba(0, 242, 255, 0.1);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>Admin - Contact Form Data</h1>
+        <button class="glow-btn" onclick="viewSavedData()">View Saved Data</button>
+        <div id="dataDisplay"></div>
+    </div>
+
+    <script>
+        function viewSavedData() {
+            const password = prompt('Enter admin password:');
+            if (password !== '26112009') {
+                alert('Incorrect password!');
+                return;
+            }
+
+            const savedData = JSON.parse(localStorage.getItem('contactFormData')) || [];
+            const dataDisplay = document.getElementById('dataDisplay');
+            dataDisplay.innerHTML = '';
+
+            if (savedData.length === 0) {
+                dataDisplay.innerHTML = '<p>No data saved yet.</p>';
+                return;
+            }
+
+            savedData.forEach((data, index) => {
+                dataDisplay.innerHTML += `
+                    <div class="data-card">
+                        <p><strong>Submission ${index + 1}:</strong></p>
+                        <p>Name: ${data.name}</p>
+                        <p>Email: ${data.email}</p>
+                        <p>Phone: ${data.phone}</p>
+                        <p>Message: ${data.message}</p>
+                        <p>Time: ${new Date(data.timestamp).toLocaleString()}</p>
+                        <button class="delete-btn" onclick="deleteSubmission(${index})">Delete</button>
+                    </div>
+                `;
+            });
+        }
+
+        function deleteSubmission(index) {
+            if (confirm('Are you sure you want to delete this submission?')) {
+                let savedData = JSON.parse(localStorage.getItem('contactFormData')) || [];
+                savedData.splice(index, 1); // Remove submission at index
+                localStorage.setItem('contactFormData', JSON.stringify(savedData));
+                viewSavedData(); // Refresh display
+                alert('Submission deleted!');
+            }
+        }
+    </script>
+</body>
+
+</html>
